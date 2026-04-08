@@ -35,7 +35,8 @@ var last_r_leg_pos: Vector3
 var l_leg_pos: Vector3
 var r_leg_pos: Vector3
 
-@onready var skeleton := $Armature/Skeleton3D
+#@onready var skeleton := $Armature/Skeleton3D
+@onready var skeleton := $firesword/Armature/Skeleton3D
 
 var is_animating_legs := false
 var legs_anim_timer := 0.0
@@ -65,26 +66,32 @@ var is_crouching := false
 
 func _ready():
 	set_proper_local_legs_pos()
-	$Armature/Skeleton3D/LeftLeg.start()
-	$Armature/Skeleton3D/RightLeg.start()
+	skeleton.get_node("LeftLeg").start()
+	#skeleton.get_node("LeftLeg2").start()
+	skeleton.get_node("RightLeg").start()
+	#skeleton.get_node("RightLeg2").start()
 
 func set_proper_local_legs_pos() -> void:
 	var l_foot_id: int = skeleton.find_bone('Foot.L')
+	#var l_foot_id: int = skeleton.find_bone('mixamorig_LeftFoot')
 	var l_foot_rest: Transform3D = skeleton.get_bone_global_pose(l_foot_id)
-	$PropLeftLegPos.transform.origin = l_foot_rest.origin
+	$PropLeftLegPos.transform.origin = $LeftLegControl.transform.origin
 	
 	var r_foot_id: int = skeleton.find_bone('Foot.R')
+	#var r_foot_id: int = skeleton.find_bone('mixamorig_RightFoot')
 	var r_foot_rest: Transform3D = skeleton.get_bone_global_pose(r_foot_id)
-	$PropRightLegPos.transform.origin = r_foot_rest.origin
+	$PropRightLegPos.transform.origin = $RightLegControl.transform.origin
 
 func get_hips_pos() -> Vector3:
-	var hips_id: int = skeleton.find_bone('Hips')
+	#var hips_id: int = skeleton.find_bone('Hips')
+	var hips_id: int = skeleton.find_bone('mixamorig_Hips')
 	var hips_rest: Transform3D = skeleton.get_bone_rest(hips_id)
 	
 	return hips_rest.origin
 
 func set_hips_pos(pos: Vector3) -> void:
-	var hips_id: int = skeleton.find_bone('Hips')
+	#var hips_id: int = skeleton.find_bone('Hips')
+	var hips_id: int = skeleton.find_bone('mixamorig_Hips')
 	var hips_rest: Transform3D = skeleton.get_bone_rest(hips_id)
 	var new_transform = Transform3D(hips_rest)
 	new_transform.origin = pos
@@ -95,7 +102,7 @@ func set_legs_pos_to_prop_legs_pointers_pos() -> void:
 	r_leg_pos = $PropRightLegPosToGround.global_transform.origin + Vector3.UP * foot_bone_dist_to_ground
 
 func _process(delta):
-	prints(velocity)
+	#prints(velocity)
 	handle_respawn()
 	set_global_legs_pos()
 	set_prop_legs_ground_pointers()
